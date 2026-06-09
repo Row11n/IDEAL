@@ -1,0 +1,67 @@
+results_dir: experiments/ideal_tokenizer
+cloud_save_path: experiments/ideal_tokenizer # unused
+compile: False 
+global_seed: 42
+log_every: 50
+vis_every: 5000
+ckpt_every: 10000
+eval_every: 10000   
+mixed_precision: bf16
+no_local_save: True
+
+dataset: imagenet
+data_path: ./ImageNet/train
+eval_data_path: "./ImageNet/val"
+image_size: 384
+eval_image_size: 256
+
+vq_model: IDEAL
+ema: True 
+num_codebooks: 1
+codebook_size: 16384
+codebook_l2_norm: True
+codebook_embed_dim: 64
+entropy_loss_ratio: 0.01
+vq_loss_ratio: 1.0 # codebook loss
+commit_loss_beta: 0.25
+reconstruction_weight: 1.0
+perceptual_weight: 1.0
+perceptual_warmup: 10
+disc_weight: 0.5
+use_diff_aug: True 
+disc_cr_loss_weight: 4.0
+disc_start: 20000
+disc_type: dino
+disc_loss: hinge
+gen_loss: hinge
+lecam_loss_weight: 0.001
+
+decoder_up_type: CNN
+transformer_config: configs/tokenizer/ideal-transformer.yaml
+codebook_slots_embed_dim: 64
+z_channels: 1024
+
+use_semantic_stage1: False
+semantic_stage1_ckpt: ""
+freeze_semantic_stage1: False  
+semantic_zs: True
+semantic_cos_weight: 1.0
+semantic_l2_weight: 1.0
+shallow_cos_weight: 1.0
+shallow_l2_weight: 1.0
+semantic_zs_openclip_model: ViT-L-16-SigLIP2-384
+semantic_zs_openclip_pretrained: ./weights/siglip2_openclip/open_clip_model.safetensors
+semantic_zs_tokenizer_dir: ./weights/siglip2_openclip
+semantic_zs_templates:
+  - "a photo of a {}"
+semantic_zs_pooling: siglip
+
+epochs: 50
+lr: 1.0e-4
+optimizer: adamw
+lr_scheduler: cosine
+weight_decay: 5e-2
+beta1: 0.9
+beta2: 0.95
+max_grad_norm: 1.0
+global_batch_size: 256

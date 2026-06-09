@@ -1,0 +1,34 @@
+encoder_config:
+  target: ideal.core.layers.DirectFeatureEncoder
+  params:
+    image_size: 384
+    patch_size: 16
+    dim: 1024
+    encoder_variant: direct
+    fusion_mode: attn_fusion_spatial
+    visual_encoder_config:
+      target: ideal.modules.encoders.pretrained_enc_arch_timm.TimmEmbedder
+      is_trainable: False
+      params:
+        model_name: vit_large_patch16_siglip_384.v2_webli
+        pretrained: True
+        img_size: 384
+        patch_size: 16
+        feature_levels: [7, 23]
+        ckpt_path: ./weights/vit_large_patch16_siglip_384.v2_webli/model.safetensors
+decoder_config:
+  target: ideal.core.layers.DirectSemanticDecoder
+  params:
+    layer_type: normal
+    image_size: 384
+    patch_size: 16
+    dim: 1024
+    depth: 6
+    num_head: 8
+    mlp_dim: 2048
+    dim_head: 64
+    dropout: 0.1
+    n_carrier: 576
+    num_register_tokens: 4
+    semantic_dim: 1024
+    fusion_mode: attn_fusion_spatial
